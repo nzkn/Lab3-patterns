@@ -1,0 +1,170 @@
+{% extends 'base.html' %}
+
+{% block title %} Lab3 {% endblock %}
+
+{% block body %}
+<div class="column">
+    <div style="background:#FFEFD5 !important" class="jumbotron jumbotron-fluid">
+        <div class="header1">
+            <div class="container">
+                <h1 class="display-4">Courses CRUD Dashboard</h1>
+            </div>
+        </div>
+    </div>
+    <div class="row-full">
+        <div class="col md-12">
+            <div style="background:#FFFFF0 !important" class="jumbotron p-3">
+                <h2>Courses
+                    <button type="button" class="btn btn-success float-right"
+                            style="float: right;" data-toggle="modal" data-target="#mymodal">Add Course
+                    </button>
+                </h2>
+
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-success alert-dismissible" role="alert">
+                    <button type="button" aria-hidden="true" class="close" data-dismiss="alert" aria-label="close">
+                        <span aria-hidden="true">x</span>
+                    </button>
+                    {{message}}
+                </div>
+                {% endfor %}
+                {% endif %}
+                {% endwith %}
+
+                <div class="sizedBox"></div>
+                <table class="table table-hover table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Subject</th>
+                        <th>Language</th>
+                        <th>Author ID</th>
+                    </tr>
+
+                    {% for row in courses %}
+                    <tr>
+                        <td>{{row.id}}</td>
+                        <td>{{row.name}}</td>
+                        <td>{{row.subject}}</td>
+                        <td>{{row.language}}</td>
+                        <td>{{row.author_id}}</td>
+                        <td>
+                            <a href="/update/{{row.id}}" class="btn btn-warning btn-xs" data-toggle="modal"
+                               data-target="#modaledit{{row.id}}">Edit</a>
+                            <a href="/delete/{{row.id}}" class="btn btn-danger btn-xs"
+                               onclick="return confirm('Are you sure you want to delete?')">Delete</a>
+                        </td>
+                    </tr>
+
+                    <!-- Modal Edit Appointment-->
+                    <div id="modaledit{{row.id}}" class="modal fade" role="dialog">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title">Update Appointment</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <form action="{{url_for('update')}}" method="POST">
+                                        <input type="hidden" name="id" value="{{row.id}}">
+                                        <div class="form-group">
+                                            <label>Name:</label>
+                                            <input type="text" class="form-control" name="name" required="1" value="{{row.name}}">
+                                        </div>
+
+                                        <div class="smallSizedBox"></div>
+                                        <label>Subject:</label>
+                                        <select class="form-select" aria-label="Subject" name="subject">
+                                            <option selected>{{row.subject}}</option>
+                                            <option value="1">Math</option>
+                                            <option value="2">Programming</option>
+                                            <option value="3">Physics</option>
+                                        </select>
+
+                                        <div class="smallSizedBox"></div>
+                                        <label>Language:</label>
+                                        <select class="form-select" aria-label="Language" name="language">
+                                            <option selected>{{row.language}}</option>
+                                            <option value="1">Ukrainian</option>
+                                            <option value="2">English</option>
+                                        </select>
+
+                                        <div class="smallSizedBox"></div>
+                                        <div class="form-group">
+                                            <label>Author ID</label>
+                                            <input type="number" class="form-control" min="0"
+                                                   data-bind="value:replyNumber" name="author_id" required="1" value="{{row.author_id}}">
+                                        </div>
+
+                                        <div class="smallSizedBox"></div>
+                                        <div class="form-group">
+                                            <button class="btn btn-primary" type="submit">Edit Appointment</button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="smallSizedBox"></div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                </table>
+            </div>
+
+            <!-- Create Appointment Modal-->
+            <div id="mymodal" class="modal show" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Create Course</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form action="{{url_for('insert')}}" method="POST">
+                                <div class="form-group">
+                                    <label>Name:</label>
+                                    <input type="text" class="form-control" name="name" required="1">
+                                </div>
+                                <div class="smallSizedBox"></div>
+                                <label>Subject:</label>
+                                <select class="form-select" aria-label="Subject" name="subject">
+                                    <option selected>Math</option>
+                                    <option value="1">Math</option>
+                                    <option value="2">Programming</option>
+                                    <option value="3">Physics</option>
+                                </select>
+                                <div class="smallSizedBox"></div>
+                                <label>Language:</label>
+                                <select class="form-select" aria-label="Language" name="language">
+                                    <option selected>Ukrainian</option>
+                                    <option value="1">Ukrainian</option>
+                                    <option value="2">English</option>
+                                </select>
+                                <div class="smallSizedBox"></div>
+                                <div class="form-group">
+                                    <label>Author ID</label>
+                                    <input type="number" class="form-control" min="0" data-bind="value:replyNumber" name="author_id" required="1">
+                                </div>
+                                <div class="smallSizedBox"></div>
+                                <div class="form-group">
+                                    <button class="btn btn-primary" type="submit">Publish Course</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="smallSizedBox"></div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
